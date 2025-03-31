@@ -1,0 +1,20 @@
+<app-anime-list [title]="title" [animeList]="animeList"></app-anime-list>
+<div class="d-flex justify-content-around align-items-center mt-5">
+  <button
+    class="btn btn-primary"
+    (click)="changePage(false)"
+    [disabled]="currentPage === 1"
+  >
+    &lt; Précédent
+  </button>
+  <div class="text-center my-3">
+    <span>Page {{ currentPage }} / {{ pagination?.last_visible_page }}</span>
+  </div>
+  <button
+    class="btn btn-primary"
+    (click)="changePage(true)"
+    [disabled]="!pagination?.has_next_page"
+  >
+    Suivant &gt;
+  </button>
+</div>

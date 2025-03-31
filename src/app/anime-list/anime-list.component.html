@@ -1,0 +1,10 @@
+<div class="container mt-2">
+  <h1 class="my-4">{{ title }}</h1>
+  <div class="row">
+    @for(anime of animeList;track anime.id) {
+    <div class="col-2">
+      <app-anime [anime]="anime"></app-anime>
+    </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="container">
+  <app-intro></app-intro>
+  <div class="row">
+    <app-anime-list
+      title="Anime populaires"
+      [animeList]="popularAnimeList"
+    ></app-anime-list>
+    <div class="col-12 text-center my-3">
+      <button class="btn btn-primary" (click)="navigateToAnimePage('popular')">
+        Voir plus
+      </button>
+    </div>
+    <app-anime-list
+      title="Anime en cours"
+      [animeList]="currentAnimeList"
+    ></app-anime-list>
+    <div class="col-12 text-center my-3">
+      <button class="btn btn-primary" (click)="navigateToAnimePage('now')">
+        Voir plus
+      </button>
+    </div>
+  </div>
+</div>
