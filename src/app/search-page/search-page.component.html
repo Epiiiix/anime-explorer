@@ -1,10 +1,7 @@
 <div class="container mt-3">
   <h2>Résultats pour "{{ query }}"</h2>
   @if(animeList.length > 0) {
-  <app-anime-list
-    title="Search Results"
-    [animeList]="animeList"
-  ></app-anime-list>
+  <app-anime-list [animeList]="animeList"></app-anime-list>
   } @else{
   <p>Aucun anime trouvé pour "{{ query }}".</p>
   }

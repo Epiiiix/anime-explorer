@@ -16,8 +16,8 @@
         <h5>Rating: {{ anime.rating }}</h5>
         <div class="d-flex align-items-center">
           <span class="h3 text-warning mr-2">{{ anime.score }}</span>
-          <span>({{ anime.scored_by }} votes)</span>
         </div>
+        <span>({{ anime.scored_by }} votes)</span>
       </div>
 
       <div class="mt-4">
@@ -29,11 +29,17 @@
       </div>
     </div>
   </div>
-  @if(recommendations.length > 0){
+  @if(characters.length > 0){
+  <hr />
+  <app-character-list
+    title="Personnages"
+    [characters]="characters"
+  ></app-character-list>
+  } @if(recommendations.length > 0){
   <hr />
   <app-anime-list
-    title="Recommendations"
+    title="Recommandations"
     [animeList]="recommendations"
-  ></app-anime-list>
-  }
+  ></app-anime-list
+  >}
 </div>

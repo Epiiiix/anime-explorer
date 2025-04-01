@@ -31,16 +31,16 @@ export class AnimePageComponent {
       if (category === 'now' || category === 'popular') {
         this.category = category;
         this.category === 'now'
-          ? (this.title = 'Current anime')
-          : (this.title = 'Popular anime');
-        this.loadAnimes();
+          ? (this.title = 'Anime en cours')
+          : (this.title = 'Anime populaire');
+        this.loadAnimeList();
       } else {
         this.router.navigate(['']);
       }
     });
   }
 
-  loadAnimes(): void {
+  loadAnimeList(): void {
     const apiCall =
       this.category === 'now'
         ? this.apiService.getCurrentAnimeList(this.limit, this.currentPage)
@@ -58,6 +58,6 @@ export class AnimePageComponent {
     } else if (!next && this.currentPage > 1) {
       this.currentPage--;
     }
-    this.loadAnimes();
+    this.loadAnimeList();
   }
 }

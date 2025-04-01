@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AnimeListComponent } from '../anime-list/anime-list.component';
+import { CharacterListComponent } from '../character-list/character-list.component';
 
 @Component({
   selector: 'app-anime-detail',
-  imports: [AnimeListComponent],
+  imports: [AnimeListComponent, CharacterListComponent],
   templateUrl: './anime-detail.component.html',
   styleUrl: './anime-detail.component.css',
 })
@@ -14,6 +15,7 @@ export class AnimeDetailComponent {
   route = inject(ActivatedRoute);
 
   anime: any;
+  characters: any = [];
   recommendations: any = [];
 
   ngOnInit(): void {
@@ -25,6 +27,9 @@ export class AnimeDetailComponent {
       this.apiService
         .getAnimeRecommendations(id)
         .subscribe((animes) => (this.recommendations = animes));
+      this.apiService
+        .getCharactersByAnime(id)
+        .subscribe((characters) => (this.characters = characters));
     });
   }
 }
