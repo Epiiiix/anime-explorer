@@ -94,9 +94,17 @@ export class GuessRandomCharacterComponent implements OnInit {
     }
   }
 
+  selectFirstSuggestion() {
+    if (this.filteredCharacters.length > 0) {
+      const firstSuggestion = this.filteredCharacters[0];
+      this.selectCharacter(firstSuggestion);
+    }
+  }
+
   selectCharacter(character: any) {
     this.userInput.setValue(character.name, { emitEvent: false });
     this.filteredCharacters = [];
+    this.checkAnswer();
   }
 
   incrementAttempts() {
