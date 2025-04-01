@@ -109,4 +109,38 @@ export class ApiService {
     const url: string = 'https://api.jikan.moe/v4/anime?q=' + query;
     return this.fetchAnimeList(url);
   }
+
+  getPopularCharacters(page: number): Observable<any> {
+    return this.httpClient
+      .get<any>(`https://api.jikan.moe/v4/top/characters?page=${page}`)
+      .pipe(
+        map((response) => response.data),
+        map((characters) =>
+          characters.map((character: any) => ({
+            id: character.mal_id,
+            name: character.name,
+            img: character.images.jpg.image_url,
+            about: character.about,
+            nicknames: character.nicknames || [],
+          }))
+        )
+      );
+  }
+  getCharactersByAnime(id: string): Observable<any> {
+    const url: string = 'https://api.jikan.moe/v4/anime/' + id + '/characters';
+    return this.httpClient.get<any>(url).pipe(
+      map((response) => response.data),
+      map((characters: any[]) =>
+        characters
+          .map((character: any) => ({
+            id: character.character.mal_id,
+            name: character.character.name,
+            img: character.character.images.webp.image_url,
+            score: character.favorites,
+          }))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 6)
+      )
+    );
+  }
 }
