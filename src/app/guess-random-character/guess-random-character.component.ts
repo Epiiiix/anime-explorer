@@ -5,9 +5,11 @@ import {
   debounceTime,
   distinctUntilChanged,
   map,
-  Observable,
   startWith,
-  forkJoin,
+  from,
+  concatMap,
+  timer,
+  toArray,
 } from 'rxjs';
 
 @Component({
@@ -19,6 +21,7 @@ import {
 export class GuessRandomCharacterComponent implements OnInit {
   apiService = inject(ApiService);
 
+  loading: boolean = true;
   randomCharacter: any = null;
   popularCharacters: any[] = [];
   filteredCharacters: any[] = [];
@@ -35,34 +38,47 @@ export class GuessRandomCharacterComponent implements OnInit {
 
   userInput: FormControl = new FormControl('');
 
-  get imageFilter(): string {
-    return `grayscale(${this.grayscaleActive ? '100%' : '0%'}) blur(${
-      this.blurLevel
-    }px)`;
-  }
-
   ngOnInit(): void {
     this.getRandomCharacter();
     this.setupAutocomplete();
   }
 
+  imageFilter(): string {
+    return `grayscale(${this.grayscaleActive ? '100%' : '0%'}) blur(${
+      this.blurLevel
+    }px)`;
+  }
+
   getRandomCharacter() {
-    const requests: Observable<any>[] = [];
+    const pages = [1, 2, 3, 4]; // 100 personnages
+    const delayBetween = 350;
 
-    for (let i = 1; i <= 3; i++) {
-      requests.push(this.apiService.getPopularCharacters(i));
-    }
+    this.loading = true;
 
-    forkJoin(requests).subscribe((results) => {
-      this.popularCharacters = results.flat();
+    from(pages)
+      .pipe(
+        concatMap((page, index) =>
+          timer(index * delayBetween).pipe(
+            concatMap(() => this.apiService.getPopularCharacters(page))
+          )
+        ),
+        toArray()
+      )
+      .subscribe({
+        next: (results) => {
+          this.popularCharacters = results.flat();
 
-      if (this.popularCharacters.length > 0) {
-        const randomIndex = Math.floor(
-          Math.random() * this.popularCharacters.length
-        );
-        this.randomCharacter = this.popularCharacters[randomIndex];
-      }
-    });
+          if (this.popularCharacters.length > 0) {
+            const randomIndex = Math.floor(
+              Math.random() * this.popularCharacters.length
+            );
+            this.randomCharacter = this.popularCharacters[randomIndex];
+          }
+        },
+        complete: () => {
+          this.loading = false;
+        },
+      });
   }
 
   setupAutocomplete() {
@@ -153,5 +169,6 @@ export class GuessRandomCharacterComponent implements OnInit {
     this.grayscaleActive = true;
     this.userInput.setValue('');
     this.attemptedAnswers = [];
+    this.showHint = false;
   }
 }

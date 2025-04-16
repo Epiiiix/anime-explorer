@@ -1,6 +1,13 @@
 <div class="container d-flex flex-column align-items-center mt-5 mb-5">
   <h1 class="text-center mb-4">Guess the anime character!</h1>
-  @if(randomCharacter) {
+  @if(loading) {
+  <div class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p class="mt-2 text-muted">Chargement du personnage...</p>
+  </div>
+  } @else{
   <div
     class="card p-4 shadow-lg rounded-4 text-center animate__animated animate__fadeIn"
   >
@@ -8,7 +15,7 @@
       <img
         [src]="randomCharacter.img"
         [alt]="randomCharacter.name"
-        [style.filter]="imageFilter"
+        [style.filter]="imageFilter()"
         class="character-img img-fluid rounded shadow"
       />
     </div>
@@ -22,7 +29,12 @@
       </button>
 
       <button
-        class="btn btn-outline-danger fw-bold px-4"
+        class="btn fw-bold px-4"
+        [class]="
+          !showHint && attempts >= 2
+            ? 'btn btn-danger animate__animated animate__pulse animate__infinite'
+            : 'btn btn-outline-danger'
+        "
         (click)="showHint = !showHint"
         [disabled]="attempts < 2 || showHint"
       >
