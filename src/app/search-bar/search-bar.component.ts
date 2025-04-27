@@ -15,38 +15,42 @@ export class SearchBarComponent {
   @Output() searchEvent = new EventEmitter<string>();
 
   constructor() {
+    // Observe les changements de valeur dans le champ de recherche.
     this.searchCtrl.valueChanges
       .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((query) => (query ? this.searchAnime(query) : []))
+        debounceTime(300), // Attendre 300ms après chaque frappe.
+        switchMap((query) => (query ? this.searchAnime(query) : [])) // Effectue la recherche si une requête est présente.
       )
-      .subscribe((suggestions) => (this.suggestions = suggestions));
+      .subscribe((suggestions) => (this.suggestions = suggestions)); // Met à jour les suggestions avec les résultats.
   }
 
   router = inject(Router);
   apiService = inject(ApiService);
 
-  suggestions: any[] = [];
+  suggestions: any[] = []; // Liste des suggestions d'animes.
 
+  // Effectue une recherche d'animes basée sur la requête.
   private searchAnime(query: string) {
     return this.apiService
       .searchAnime(query)
-      .pipe(map((response) => (response.animeList ?? []).slice(0, 5)));
+      .pipe(map((response) => (response.animeList ?? []).slice(0, 5))); // Limite les résultats à 5 anime pour pas surcharger l'UI.
   }
 
+  // Appelée lorsqu'un utilisateur fait une recherche.
   onSearch(): void {
-    const query = (this.searchCtrl.value ?? '').trim();
+    const query = (this.searchCtrl.value ?? '').trim(); // Récupère et netttoie la valeur de la recherche.
     if (query && query.length >= 3) {
+      // Si la requête a au moins 3 caractères pour ne pas faire des recherches "inutiles".
       this.router.navigate(['/search'], { queryParams: { q: query } });
-      this.searchCtrl.setValue('');
-      this.suggestions = [];
+      this.searchCtrl.setValue(''); // Réinitialise le champ de recherche.
+      this.suggestions = []; // Vide les suggestions.
     }
   }
 
+  // Appelée lorsqu'un utilisateur sélectionne un anime dans les suggestions.
   selectAnime(id: any) {
     this.router.navigate(['/anime-details', id]);
-    this.searchCtrl.setValue('');
-    this.suggestions = [];
+    this.searchCtrl.setValue(''); // Réinitialise le champ de recherche.
+    this.suggestions = []; // Vide les suggestions.
   }
 }

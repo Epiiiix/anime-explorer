@@ -18,8 +18,10 @@ export class SearchPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
+      // Récupère la valeur de la requête 'q' dans l'URL.
       this.query = params['q'];
       if (this.query) {
+        // Si une requête est présente, appelle l'API pour rechercher les animes.
         this.apiService.searchAnime(this.query).subscribe((response) => {
           this.animeList = response.animeList ?? [];
         });
