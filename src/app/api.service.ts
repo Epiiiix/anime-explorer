@@ -50,7 +50,9 @@ export class ApiService {
   private fetchAnimeList(url: string): Observable<any> {
     return this.httpClient.get<any>(url).pipe(
       map((response) => ({
-        animeList: response.data.map(this.mapAnimeData),
+        animeList: response.data
+          .filter((anime: any) => !['R', 'R+', 'Rx'].includes(anime.rating)) // Filtrage (contenu NSFW)
+          .map(this.mapAnimeData),
         pagination: response.pagination,
       }))
     );
@@ -90,7 +92,7 @@ export class ApiService {
 
   // Recherche des animes par un terme de recherche.
   searchAnime(query: string): Observable<any> {
-    const url = `https://api.jikan.moe/v4/anime?q=${query}`;
+    const url = `https://api.jikan.moe/v4/anime?q=${query}&sfw=true`;
     return this.fetchAnimeList(url);
   }
 
