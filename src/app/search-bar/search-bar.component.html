@@ -8,7 +8,15 @@
       (keyup.enter)="onSearch()"
     />
 
-    @if(suggestions.length) {
+    @if(searchCtrl.value) {
+    <button
+      type="button"
+      class="btn btn-sm btn-light position-absolute clear-btn"
+      (click)="clearSearch()"
+    >
+      ❌
+    </button>
+    } @if(suggestions.length && this.searchCtrl.value != '') {
     <ul class="list-group mt-1 shadow-sm rounded position-absolute w-100">
       @for(anime of suggestions; track anime.id) {
       <li

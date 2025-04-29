@@ -53,4 +53,10 @@ export class SearchBarComponent {
     this.searchCtrl.setValue(''); // Réinitialise le champ de recherche.
     this.suggestions = []; // Vide les suggestions.
   }
+
+  // Appelée lorsqu'un utilisateur nettoie le champ d'entrée de la barre de recherche.
+  clearSearch() {
+    this.searchCtrl.setValue('');
+    this.suggestions = [];
+  }
 }
